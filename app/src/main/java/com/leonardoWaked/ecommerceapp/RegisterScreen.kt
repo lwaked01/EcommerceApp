@@ -41,7 +41,7 @@ fun RegisterScreen(){
          Spacer(modifier = Modifier.height(31.dp))
 
          Text(
-             text = "Iniciar Sesion",
+             text = "Registrarse",
              fontSize = 24.sp,
              color = Color(0xFFFF9900),
              fontWeight = FontWeight.Bold
@@ -65,6 +65,25 @@ fun RegisterScreen(){
              },
              shape = RoundedCornerShape(12.dp)
          )
+
+         Spacer(modifier = Modifier.height(30.dp))
+
+         OutlinedTextField(
+             value = "",
+             onValueChange = {},
+             modifier = Modifier.fillMaxWidth(),
+             leadingIcon = {
+                 Icon(
+                     imageVector = Icons.Default.Email,
+                     contentDescription = "Nombre",
+                     tint = Color(0xFFFF9900)
+                 )
+             },
+             label = {
+                 Text(text = "Nombre Completo")
+             },
+             shape = RoundedCornerShape(12.dp)
+         )
          Spacer(modifier = Modifier.height(30.dp))
 
          OutlinedTextField(
@@ -83,6 +102,25 @@ fun RegisterScreen(){
              },
              shape = RoundedCornerShape(12.dp)
          )
+
+         Spacer(modifier = Modifier.height(30.dp))
+
+         OutlinedTextField(
+             value = "",
+             onValueChange = {},
+             modifier = Modifier.fillMaxWidth(),
+             leadingIcon = {
+                 Icon(
+                     imageVector = Icons.Default.Lock,
+                     contentDescription = "Contraseña",
+                     tint = Color(0xFFFF9900)
+                 )
+             },
+             label = {
+                 Text(text = "Confimar Contraseña")
+             },
+             shape = RoundedCornerShape(12.dp)
+         )
          Spacer(modifier = Modifier.height(30.dp))
 
          Button(onClick = {}, modifier = Modifier.fillMaxWidth()
@@ -92,7 +130,7 @@ fun RegisterScreen(){
                  containerColor = Color(0xFFFF9900)
              )
          ) {
-             Text("Iniciar Sesion")
+             Text("Registrarse")
          }
      }
  }
