@@ -96,7 +96,9 @@ fun LoginScreen(myNavController: NavController) {
             )
             Spacer(modifier = Modifier.height(30.dp))
 
-            Button(onClick = {}, modifier = Modifier.fillMaxWidth()
+            Button(onClick = {
+                myNavController.navigate("home")
+            }, modifier = Modifier.fillMaxWidth()
                 .height(50.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -107,7 +109,9 @@ fun LoginScreen(myNavController: NavController) {
             }
             Spacer(modifier = Modifier.height(30.dp))
 
-            TextButton(onClick = {}) {
+            TextButton(onClick = {
+                myNavController.navigate("register")
+            }) {
                 Text(
                     text = "¿No tienes una cuenta?",
                     color = Color(0xFFFF9900)
