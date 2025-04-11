@@ -41,7 +41,12 @@ android {
 
 dependencies {
 
-    implementation("androidx.navigation:navigation-compose:2.8.9")
+    //Esta es la libreria de navegacion
+    implementation(libs.androidx.navigation.compose)
+    //Esta es la libreria para imagenes de internet URL
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
