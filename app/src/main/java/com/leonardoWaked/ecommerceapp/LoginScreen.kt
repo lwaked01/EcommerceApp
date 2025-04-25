@@ -120,7 +120,7 @@ fun LoginScreen(myNavController: NavController) {
 
                 auth.signInWithEmailAndPassword(inputEmail,inputPassword).addOnCompleteListener(activity){
                     task ->
-                    if(task.isComplete){
+                    if(task.isSuccessful){
                         myNavController.navigate("home")
                     }else{
                         Log.i("login", "Hubo un error")
