@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "361264010367",
+    "project_id": "ecommerceapp-b7989",
+    "storage_bucket": "ecommerceapp-b7989.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361264010367:android:cdb6c21881f5ff9fc01b4a",
+        "android_client_info": {
+          "package_name": "com.leonardoWaked.ecommerceapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdrHrnYsXTmSy19CAWDFC2IGLIGnlaMe4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
