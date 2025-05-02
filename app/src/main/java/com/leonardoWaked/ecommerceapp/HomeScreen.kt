@@ -1,5 +1,6 @@
 package com.leonardoWaked.ecommerceapp
 
+import android.net.wifi.hotspot2.pps.HomeSp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,10 +41,12 @@ import com.google.firebase.auth.auth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onClickLogOut: () -> Unit = {}){
+fun HomeScreen(onClickLogOut: () -> Unit = {}, backHomeSp: () -> Unit = {}){
 
     val auth = Firebase.auth
     val user = auth.currentUser
+
+    val backHome = auth.signOut()
 
 
 
@@ -65,7 +68,7 @@ fun HomeScreen(onClickLogOut: () -> Unit = {}){
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { auth.signOut() }) {
+                    IconButton(onClick = { }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = "Localized description"
@@ -73,7 +76,7 @@ fun HomeScreen(onClickLogOut: () -> Unit = {}){
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = { backHomeSp() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Localized description"
