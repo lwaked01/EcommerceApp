@@ -16,7 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -36,26 +40,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.auth
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-fun LoginScreen(myNavController: NavController) {
+fun LoginScreen(onClickRegister: ()->Unit = {}, onSuccessfulLogin: ()->Unit = {}) {
 
     var inputEmail by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
+    var loginError by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("")}
+    var passwordError by remember { mutableStateOf("")}
 
     val activity = LocalView.current.context as Activity
 
+    val auth = Firebase.auth
 
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -92,7 +107,20 @@ fun LoginScreen(myNavController: NavController) {
                 label = {
                     Text(text = "Correo Electronico")
                         },
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                supportingText = {
+                    if (emailError.isNotEmpty()){
+                        Text(
+                            text = emailError,
+                            color = Color.Red
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Email
+                )
             )
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -110,22 +138,63 @@ fun LoginScreen(myNavController: NavController) {
                 label = {
                     Text(text = "Contraseña")
                 },
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                supportingText = {
+                    if (passwordError.isNotEmpty()){
+                        Text(
+                            text = passwordError,
+                            color = Color.Red
+                        )
+                    }
+                },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Password
+                )
             )
             Spacer(modifier = Modifier.height(30.dp))
 
+            if (loginError.isNotEmpty()){
+                Text(
+                    loginError,
+                    color = Color.Red,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                )
+            }
+
+
+
             Button(onClick = {
 
-                val auth = Firebase.auth
 
-                auth.signInWithEmailAndPassword(inputEmail,inputPassword).addOnCompleteListener(activity){
-                    task ->
-                    if(task.isSuccessful){
-                        myNavController.navigate("home")
-                    }else{
-                        Log.i("login", "Hubo un error")
+                val isValidEmail:Boolean = validateEmail(inputEmail).first
+
+                val isValidPassword:Boolean = validatePassword(inputPassword).first
+
+                emailError = validateEmail(inputEmail).second
+                passwordError = validatePassword(inputPassword).second
+
+                if (isValidEmail && isValidPassword){
+                    auth.signInWithEmailAndPassword(inputEmail,inputPassword).addOnCompleteListener(activity){
+                            task ->
+                        if(task.isSuccessful){
+                            onSuccessfulLogin()
+                        }else{
+
+                            loginError = when(task.exception){
+                                is FirebaseAuthInvalidCredentialsException -> "Correo o contrasea incorrecta"
+                                is FirebaseAuthInvalidUserException -> "No existe una cuenta con este correo"
+                                else -> "Error al iniciar sesion. Intenta de nuevo"
+                            }
+                        }
                     }
+                }else{
+                    1f
                 }
+
+
 
 
             }, modifier = Modifier.fillMaxWidth()
@@ -139,9 +208,7 @@ fun LoginScreen(myNavController: NavController) {
             }
             Spacer(modifier = Modifier.height(30.dp))
 
-            TextButton(onClick = {
-                myNavController.navigate("register")
-            }) {
+            TextButton(onClick = onClickRegister) {
                 Text(
                     text = "¿No tienes una cuenta?",
                     color = Color(0xFFFF9900)
@@ -157,13 +224,3 @@ fun LoginScreenPreview() {
     //LoginScreen()
 }
 
-fun validateEmail (email:String): Pair<Boolean,String>{
-
-    return  when{
-        email.isEmpty()-> Pair(false, "El correo es obligatorio")
-        !email.endsWith("@unab.edu.co") -> Pair(false, "El correo debe ser unab")
-
-        else -> Pair(true, "")
-    }
-
-}
